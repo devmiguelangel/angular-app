@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Angular - Bootstrap</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+	<script src="https://code.angularjs.org/1.3.16/angular-route.min.js"></script>
+
+</head>
+<body ng-app="v2bApp" ng-controller="controlador1">
+	
+	<div ng-include=" 'menu.html' " ></div>
+
+	<div class="jumbotron">
+	    <div class="container">
+	        <h1>Bienvenido al NG-ZOO</h1>
+	       
+	    	<input type="text" class="form-control" placeholder="Animal" 
+	    		aria-describedby="basic-addon1" ng-model="animal_extra">
+			
+			<button type="button" class="btn btn-success" ng-click="appendAnimal()">Agregar</button>
+	    </div>
+
+	</div>
+
+	<div class="container">
+	    <ul class="list-group">
+			<li class="list-group-item" ng-repeat="animal in animales">
+				{{ animal }}
+			</li>
+        </ul>
+	</div>
+
+</body>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+var app = angular.module('v2bApp', [ 'ngRoute' ]);
+
+app.controller('controlador1', ['$scope', function($scope){
+	$scope.animales = [
+		'Tigre',
+		'Elefante',
+		'Mono',
+		'Oso',
+		'Rinoceronte'
+	];
+
+	$scope.appendAnimal = function () {
+		$scope.animales.push($scope.animal_extra);
+	};
+
+}]);
+
+</script>
+
+</html>

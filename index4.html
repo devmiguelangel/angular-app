@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Curso AngularJS</title>
+	<meta charset="utf-8">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+
+</head>
+<body ng-app="v2bApp">
+	
+	<div ng-controller="controlador1">
+		<h1>Promoción de mangos</h1>
+		<h2>$2.15 cada uno</h2>
+
+		<label>Cantidad de Mangos:</label>
+		<input type="text" ng-model="cantidad" >
+		
+		<br>
+
+		Precio Total: {{ cantidad * precio | currency }}
+	</div>
+	<hr>
+	
+	<div ng-controller="controlador2">
+		{{ nombre }}
+	</div>
+	<hr>
+
+	<div ng-controller="circunferencia">
+		<label>Diametro</label>
+		<input type="text" ng-model="diametro">
+		<button ng-click="calcularCircunferencia()">Calcular Circunferencia</button>
+		<br>
+		{{ circunferencia }}
+
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	var app = angular.module('v2bApp', []);
+
+	app.controller('controlador1', ['$scope', function($scope){
+		$scope.cantidad = 0;
+		$scope.precio 	= 2.15;
+	}]);
+
+	app.controller('controlador2', ['$scope', function($scope){
+		$scope.nombre = 'Miki';
+	}]);
+
+	app.controller('circunferencia', ['$scope', function($scope){
+		var pi = 3.14;
+
+		$scope.calcularCircunferencia = function () {
+			$scope.circunferencia = $scope.diametro * pi;
+		};
+	}]);
+</script>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Curso AngularJS</title>
+	<meta charset="utf-8">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+
+</head>
+<body ng-app="v2bApp">
+	
+	<div ng-controller="controlador1">
+		<h1>Nombres</h1>
+
+		<ul>
+			<li ng-repeat="nombre in nombres">
+				{{ nombre }}
+			</li>
+		</ul>
+
+		<h1>Heroes</h1>
+		<ul>
+			<li ng-repeat="heroe in heroes">
+				{{ heroe.nombre + ' ' + heroe.apellido }}
+			</li>
+		</ul>
+	</div>
+	<hr>
+	
+	<div ng-controller="controlador2">
+		<h1>Agenda Telefónica</h1>
+		
+		<label>Buscar: </label>
+		<input type="search" ng-model="busqueda">
+
+		<p ng-repeat="entrada in agenda | filter:busqueda">
+			{{ entrada.nombre }} : {{ entrada.telefono }}
+		</p>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	var app = angular.module('v2bApp', []);
+
+	app.controller('controlador1', ['$scope', function($scope){
+		$scope.nombres = [ 'Miguel', 'Carlos', 'Juan' ];
+
+		$scope.heroes = [
+			{
+				nombre: 'Arnold',
+				apellido: 'Schwarzenegger'
+			},
+			{
+				nombre: 'Sylvester',
+				apellido: 'Stallone'
+			},
+			{
+				nombre: 'Chuck',
+				apellido: 'Norris'
+			}
+		];
+	}]);
+
+	app.controller('controlador2', ['$scope', function($scope){
+		$scope.agenda = [
+			{nombre:'Lincy',    telefono:'01-2250-1675'},
+            {nombre:'Alexei',   telefono:'01-9250-5345'},
+            {nombre:'Pizzeria', telefono:'800-NG-PIZZA'},
+            {nombre:'Natalia',  telefono:'01-4250-2465'},
+            {nombre:'Natalia',  telefono:'01-8650-1575'},
+            {nombre:'Karol',    telefono:'01-1240-6875'},
+            {nombre:'Ivanner',  telefono:'01-2950-3679'},
+            {nombre:'Josue',    telefono:'01-8250-4805'}
+		];
+	}]);
+
+</script>
+
+</html>

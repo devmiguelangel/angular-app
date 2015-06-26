@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS</title>
+	<meta charset="utf-8">
+	
+	<link rel="stylesheet" type="text/css" href="base.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+</head>
+<body ng-app>
+
+<h1>Curso de AngularJS</h1>
+
+<label>Nombre: </label>
+<input type="text" ng-model="name" >
+
+<div class="tarjeta">
+	<h2>Mi nombre es</h2>
+	<h1> {{ name }} </h1>
+</div>
+
+<button ng-click="controladorBoton()" ng-show="false">
+	Click
+</button>
+
+<script type="text/javascript">
+	
+</script>
+
+</body>
+</html>

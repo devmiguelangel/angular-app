@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Curso AngularJS</title>
+	<meta charset="utf-8">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+
+<style type="text/css">
+div {
+	width: 600px;
+	margin: 10px auto;
+    text-align: center;
+}
+
+.contenedor {
+	border: solid 2px;
+}
+
+.angular {
+	background: red;
+	font-size: 40px;
+	padding: 0 40px;
+	color: #fff;
+}
+
+.alerta {
+	width: 400px;
+	height: 200px;
+	line-height: 200px;
+	text-align: center;
+	font-family: monospace;
+	color: #fff;
+	background: #000;
+	font-size: 22px;
+}
+
+img {
+	padding: 5px;
+	border: solid 1px #000;
+	display: block;
+	margin: 10px 0;
+	width: 300px;
+}
+
+</style>
+
+</head>
+<body ng-app="v2bApp">
+
+	<div ng-controller="controlador1">
+		<div class="contenedor">
+			<p ng-style="nuevoEstilo">
+				 Yo controlo el estilo de mis aplicaciones con 
+				 <span ng-class="nuevaClase">AngularJS</span> 
+			</p>
+		</div>
+
+		<button ng-click="newStyle()">Cambiar Estilo</button>
+		<button ng-click="newClass()">Cambiar Clase</button>
+		<button ng-click="resetClass()">Resetear</button>
+
+		<hr>
+		
+		<button ng-click="showMess()">Mostrar Mensaje</button>
+		<button ng-click="hiddenMess()">Ocultar Mensaje</button>
+
+		<div class="alerta" ng-show="visibilidadMensaje">
+			Este es un mensaje secreto
+		</div>
+
+		<hr>
+		<img ng-src=" {{ imageData }} ">
+		
+		<button ng-click="cambiarImagen('ejemplo1.png')">Imagen 1</button>
+		<button ng-click="cambiarImagen('ejemplo2.png')">Imagen 2</button>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	var app = angular.module('v2bApp', []);
+
+	app.controller('controlador1', ['$scope', function($scope){
+		$scope.newStyle = function () {
+			$scope.nuevoEstilo = { 'background' : 'blue', 'color' : 'yellow' };
+		};
+
+		$scope.newClass = function () {
+			$scope.nuevaClase = 'angular';
+		};
+
+		$scope.resetClass = function () {
+			$scope.nuevoEstilo 	= '';
+			$scope.nuevaClase 	= '';
+		};
+
+		$scope.visibilidadMensaje = false;
+
+		$scope.showMess = function () {
+			$scope.visibilidadMensaje = true;
+		};
+
+		$scope.hiddenMess = function () {
+			$scope.visibilidadMensaje = false;
+		};
+
+		$scope.imageData = 'ejemplo1.png';
+
+		$scope.cambiarImagen = function (imagen) {
+			$scope.imageData = imagen;
+		};
+
+	}]);
+</script>
+
+</html>
