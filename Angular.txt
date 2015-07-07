@@ -380,6 +380,496 @@ bower install
 grunt serve
 
 ---------------------------------------------
+1.	Introduccion
+- Es un framework MVW
+- Framework (Sowtware general que puede ser selectivamente modificado por codigo adicional del usuario para crear software especifico) - (Universal - Reusable - Facilita el desarrollo)
+- MVW (Model - View - Whatever works for you)
+- Cuando usar AngularJS
+	- Las vistas se construyen a partir de ciertos datos
+	- Las vistas modifican los datos de la aplicacion
+	- La app consume datos de una REST API
+	- Tiene logica compleja en el JS de la app
+- Conceptos principales de AngularJS
+	- Directives - HTML con super poderes
+	- Controllers - Contiene la logica de la app via $scope
+	- Factories y Services - Organiza y comparte codigo en la app
+	- Filters - Dan formatos a los datos cuando son presentados
+
+2.	Hola mundo
+- https://angularjs.org/
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+<body ng-app>
+	{{ 'Hola ' + 'Mundo' }}
+</body>
+
+3.	Primer Controlador
+<body ng-app="cfApp">
+<div ng-controller="FirstController">
+	{{ 'Hola ' + nombre }}
+</div>
+</body>
+
+<script type="text/javascript" src="js/controller.js"></script>
+
+var app = angular.module('cfApp', []);
+
+app.controller('FirstController', ['$scope', function($scope){
+	$scope.nombre = 'Miguel';
+}]);
+
+4.	Modulos
+- var app = angular.module('cfApp', [" Dependencias "]);
+
+5.	Two Way Data Binding y ngModel
+- Data Binding es la sincronizacion entre el modelo y la vista
+
+<div ng-controller="FirstController">
+	<label>Comentario: </label><input type="text" ng-model="comment_new.comment">
+	<br>
+	<label>Usuario: </label><input type="text" ng-model="comment_new.user">
+	<br>
+	<button ng-click="newComment()">Nuevo Comentario</button>
+	
+	<br>
+	<ul>
+		<li ng-repeat="comment in comments">
+			{{ comment.comment }} - <strong>{{ comment.user }}</strong>
+		</li>
+	</ul>
+</div>
+
+app.controller('FirstController', ['$scope', function($scope){
+	$scope.comment_new = {
+		comment: 	"",
+		user:		""
+	};
+
+	$scope.comments = [
+		{
+			comment:	'Buen Tutorial',
+			user:		'miguel'
+		},
+		{
+			comment:	'Mal Tutorial',
+			user:		'juan'
+		}
+	];
+
+	$scope.newComment = function () {
+		$scope.comments.push($scope.comment_new);
+		$scope.comment_new = {
+			comment: 	"",
+			user:		""
+		};
+	};
+
+}]);
+
+6.	Dependency Injection
+- Las dependencias q se generan o crean se las pueden incrustar en los controlador o el modulo
+- Ruby on Rails minifica automaticamente el JS
+
+app.controller('Controller', '$scope', 'dep1', 'dep2', function($scope, dep1, dep2){ ... 
+
+7.	Ajax con $http
+- $http es un core de Angular que facilita la comunicacion asincrona con servidores remotos a travez de XMLHttpRequest o JSON
+
+<div ng-controller="AjaxController">
+	<ul>
+		<li ng-repeat="post in posts">
+			<h3>
+				{{ post.title }}
+			</h3>
+			<p>
+				{{ post.body }}
+			</p>
+		</li>
+	</ul>
+
+	<label>Title: </label>
+	<input type="text" ng-model="newPost.title">
+	<br>
+	<label>Body: </label>
+	<input type="text" ng-model="newPost.body">
+	<br>
+	<button ng-click="addPost()">Enviar Post</button>
+	<br>
+
+</div>
+
+app.controller('AjaxController', ['$scope', '$http', function($scope, $http){
+	$scope.newPost = {
+		title:	'',
+		body:	''
+	};
+
+	$scope.posts = [];
+
+	$http.get('http://jsonplaceholder.typicode.com/posts')
+		.success(function (data) {
+			$scope.posts = data;
+
+			console.log(data);
+		})
+		.error(function (err) {
+			// body...
+		});
+
+	$scope.addPost = function () {
+		$http.post('http://jsonplaceholder.typicode.com/posts', {
+			title:	$scope.newPost.title,
+			body:	$scope.newPost.body,
+			userId:	1,
+		})
+			.success(function (data, status, headers, config) {
+				console.log(data);
+				$scope.posts.push(data);
+			})
+			.error(function (err, status, headers, config) {
+				console.log(err);
+			});
+	};
+}]);
+
+9.	Crear un To Do list
+<script type="text/javascript" src="js/lib/angular-local-storage.min.js"></script>
+<div ng-controller="toDoListController">
+	<ul>
+		<li ng-repeat="activity in activities">
+			{{ activity.description }} - {{ activity.datetime | date:'dd/MM/yyyy HH:mm:ss' }}
+		</li>
+	</ul>
+	
+	<form ng-submit="addActivity()">
+		<input type="text" ng-model="newActivity.description">
+		<input type="datetime-local" ng-model="newActivity.datetime">
+		<input type="submit" value="Nueva Actividad">
+	</form>
+	<br>
+
+	<button ng-click="cleanActivities()">Clean</button>
+</div>
+
+var app = angular.module('toDoListApp', ['LocalStorageModule']);
+
+app.controller('toDoListController', ['$scope', 'localStorageService', function($scope, localStorageService){
+	
+	$scope.newActivity 	= {
+		description:	'',
+		datetime:		''
+	};
+
+	$scope.activities 	= [];
+
+	if (localStorageService.get('activities')) {
+		$scope.activities = localStorageService.get('activities');
+	}
+
+	$scope.addActivity = function () {
+		$scope.activities.push($scope.newActivity);
+		// localStorageService.set('activities', $scope.activities);
+
+		$scope.newActivity 	= {
+			description:	'',
+			datetime:		''
+		};
+
+	};
+
+	$scope.cleanActivities = function() {
+		$scope.activities 	= [];
+		localStorageService.remove('activities');
+	};
+
+	$scope.$watchCollection('activities', function (newCollection, oldCollection) {
+		localStorageService.set('activities', newCollection);
+	});
+
+}]);
+
+10.	Filters
+<div ng-controller="filtersController">
+	{{ moneda | removeHtml | currency }}
+</div>
+
+var cfApp = angular.module('cfApp', []);
+
+cfApp.filter('removeHtml', function () {
+	return function (text) {
+		return String(text).replace(/<[^>]*>?/g, '');
+	};
+});
+
+cfApp.controller('filtersController', ['$scope', function($scope){
+	$scope.moneda = '<p>3</p>'
+}]);
+
+
+11.	$apply - $digest - $watch
+- Angular Context - Captura eventos para despues actualizar la pagina automaticamente
+- $ aplicar () se utiliza para ejecutar una expresión en angular desde fuera del marco angular. (Por ejemplo, de eventos DOM del navegador, setTimeout, XHR o bibliotecas de terceros).
+- Digest - Actualiza automaticamente la vista y el controlador
+- Watchers - Lista de atributos en el UI que Angular observa a que cambien
+
+<div ng-controller="appController">
+	<h1>{{ nombre }}</h1>
+
+	<button id="btn_name">Cambiar Nombre</button>
+</div>
+
+angular.module('cfApp', [])
+	.controller('appController', ['$scope', function($scope){
+		$scope.nombre = 'Miguel';
+
+		/*setTimeout(function () {
+			$scope.$apply(function () {
+				$scope.nombre = 'Angel';
+			});
+
+			console.log($scope.nombre);
+		}, 2000);*/
+
+		document.getElementById('btn_name').addEventListener('click', function () {
+			$scope.$apply(function () {
+				$scope.nombre = 'Angel';
+			});
+			
+			console.log($scope.nombre);
+		});
+	}]);
+
+
+12.	ngHide - ngShow
+<style type="text/css">
+.animated {
+	opacity: 1;
+	max-height: auto !important;
+	overflow: hidden;
+	transition: all 2s;
+}
+
+.animated.ng-hide {
+	opacity: 0;
+	max-height: 0px !important;
+	display: block !important;
+}
+</style>
+
+<div ng-controller="AjaxController">
+	<div ng-show="loader">Cargando ...</div>
+	<div ng-show="loader || posts <= 0">No existen resultados</div>
+
+	<ul ng-show="posts.length > 0" class="animated">
+		<li ng-repeat="post in posts">
+			<h3>
+				{{ post.title }}
+			</h3>
+			<p>
+				{{ post.body }}
+			</p>
+		</li>
+	</ul>
+</div>
+
+$scope.loader = true;
+
+$http.get('http://jsonplaceholder.typicode.com/posts')
+	.success(function (data) {
+		$scope.posts = data;
+
+		console.log(data);
+		$scope.loader = false;
+	})
+	.error(function (err) {
+		$scope.loader = false;
+	});
+
+13.	$rootScope y Child Controllers
+<div ng-controller="FirstController">
+	{{ nombre }}
+
+	<p><h2>
+		{{ $parent.nombre }}
+	</h2></p>
+
+	<div ng-controller="SecondController">
+		<p>{{ nombre }}</p>
+
+		<input type="text" ng-model="$parent.nombre">
+	</div>
+</div>
+
+<script type="text/javascript">
+var app = angular.module('cfApp', []);
+
+app.run(['$rootScope', function($rootScope){
+	$rootScope.nombre = 'Miguel';
+}]);
+
+app.controller('FirstController', ['$scope', function($scope){
+	$scope.nombre = 'Angel';
+}]);
+
+app.controller('SecondController', ['$scope', function($scope){
+	$scope.nombre = 'Mamani';
+}]);
+</script>
+
+14.	Factories
+- Factory - Estructurar un objeto y lo retorna (Se puede definir un constructor al objeto)
+
+<div ng-controller="toDoListController">
+	<ul>
+		<li ng-repeat="activity in activities">
+			{{ activity.description }} - {{ activity.datetime | date:'dd/MM/yyyy HH:mm:ss' }}
+			<a href="" style="text-decoration: none; color: red;" ng-click="removeActivity(activity)"> X </a>
+		</li>
+	</ul>
+	
+	<form ng-submit="addActivity()">
+		<input type="text" ng-model="newActivity.description">
+		<input type="datetime-local" ng-model="newActivity.datetime">
+		<input type="submit" value="Nueva Actividad">
+	</form>
+	<br>
+
+	<button ng-click="cleanActivities()">Clean</button>
+
+</div>
+
+var app = angular.module('toDoListApp', ['LocalStorageModule']);
+
+app.factory('ListService', ['localStorageService', function(localStorageService){
+	var listService = {};
+
+	listService.key = 'activities';
+
+	if (localStorageService.get(listService.key)) {
+		listService.activities = localStorageService.get(listService.key);
+	} else{
+		listService.activities = [];
+	}
+
+	listService.addActivity = function (newActivity) {
+		listService.activities.push(newActivity);
+		listService.updateActivities();
+	};
+
+	listService.updateActivities = function () {
+		localStorageService.set(listService.key, listService.activities);
+	};
+
+	listService.cleanActivities = function () {
+		listService.activities = [];
+		listService.updateActivities();
+	}
+
+	listService.removeActivity = function (item) {
+		listService.activities = listService.activities.filter(function (activity) {
+			return item != activity;
+		});
+
+		listService.updateActivities();
+
+		return listService.getActivities();
+	}
+
+	listService.getActivities = function () {
+		return listService.activities;
+	}
+
+	return listService;
+
+}])
+
+app.controller('toDoListController', ['$scope', 'localStorageService', 'ListService', 
+	function($scope, localStorageService, ListService){
+	
+	$scope.newActivity 	= {
+		description:	'',
+		datetime:		''
+	};
+
+	$scope.activities 	= ListService.getActivities();
+
+	$scope.addActivity = function () {
+		ListService.addActivity($scope.newActivity);
+
+		$scope.newActivity 	= {
+			description:	'',
+			datetime:		''
+		};
+
+	};
+
+	$scope.cleanActivities = function() {
+		ListService.cleanActivities();
+		// localStorageService.remove('activities');
+	};
+
+	$scope.removeActivity = function (activity) {
+		$scope.activities = ListService.removeActivity(activity);
+	};
+
+}]);
+
+15.	Services
+Factory - Se ejecuta como una funcion y retorna un valor
+Service - Se ejecuta como un modelo y retorna un objeto
+
+app.service('ListService', ['localStorageService', function(localStorageService){
+	this.key = 'activities';
+
+	if (localStorageService.get(this.key)) {
+		this.activities = localStorageService.get(this.key);
+	} else{
+		this.activities = [];
+	}
+
+	this.addActivity = function (newActivity) {
+		this.activities.push(newActivity);
+		this.updateActivities();
+	};
+
+	this.updateActivities = function () {
+		localStorageService.set(this.key, this.activities);
+	};
+
+	this.cleanActivities = function () {
+		this.activities = [];
+		this.updateActivities();
+	};
+
+	this.removeActivity = function (item) {
+		this.activities = this.activities.filter(function (activity) {
+			return item != activity;
+		});
+
+		this.updateActivities();
+
+		return this.getActivities();
+	};
+
+	this.getActivities = function () {
+		return this.activities;
+	};
+}]);
+
+16.	ngEvents - ngClass
+<button ng-mouseenter="flag = true" ng-mouseleave="flag = false" ng-class="{'hover': flag, 'no-hover': !flag}">Hola</button>
+<br>
+<span>{{ flag | json }}</span>
+
+17.	ngSrc - ngCloak
+
+
+18.	Crear Directivas
+19.	ngRoute (SPA apps)
+20.	Practica Final
+21.
+22.
+23.
 
 
 
@@ -387,7 +877,6 @@ grunt serve
 
 
 #########################################
-7.1.
 
 
 ### 00:14:00 - 00:00:00

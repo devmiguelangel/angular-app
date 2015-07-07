@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS CF</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+	<script type="text/javascript" src="js/lib/angular-local-storage.min.js"></script>
+</head>
+<body ng-app="toDoListApp">
+
+<div ng-controller="toDoListController">
+	<ul>
+		<li ng-repeat="activity in activities">
+			{{ activity.description }} - {{ activity.datetime | date:'dd/MM/yyyy HH:mm:ss' }}
+		</li>
+	</ul>
+	
+	<form ng-submit="addActivity()">
+		<input type="text" ng-model="newActivity.description">
+		<input type="datetime-local" ng-model="newActivity.datetime">
+		<input type="submit" value="Nueva Actividad">
+	</form>
+	<br>
+
+	<button ng-click="cleanActivities()">Clean</button>
+
+</div>
+	
+</body>
+
+<script type="text/javascript" src="js/controller2.js"></script>
+
+</html>

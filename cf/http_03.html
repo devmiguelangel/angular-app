@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS CF</title>
+	
+	<style type="text/css">
+	.animated {
+		opacity: 1;
+		max-height: auto !important;
+		overflow: hidden;
+		transition: all 2s;
+	}
+
+	.animated.ng-hide {
+		opacity: 0;
+		max-height: 0px !important;
+		display: block !important;
+	}
+	</style>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+</head>
+<body ng-app="cfApp">
+
+<div ng-controller="AjaxController">
+	<div ng-show="loader">Cargando ...</div>
+	<div ng-show="loader || posts <= 0">No existen resultados</div>
+
+	<ul ng-show="posts.length > 0" class="animated">
+		<li ng-repeat="post in posts">
+			<h3>
+				{{ post.title }}
+			</h3>
+			<p>
+				{{ post.body }}
+			</p>
+		</li>
+	</ul>
+</div>
+	
+</body>
+
+<script type="text/javascript" src="js/controller.js"></script>
+
+</html>

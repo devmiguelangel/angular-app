@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS CF</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+</head>
+<body ng-app="cfApp">
+
+<div ng-controller="appController">
+	<h1>{{ nombre }}</h1>
+
+	<button id="btn_name">Cambiar Nombre</button>
+</div>
+	
+</body>
+
+<script type="text/javascript">
+	angular.module('cfApp', [])
+		.controller('appController', ['$scope', function($scope){
+			$scope.nombre = 'Miguel';
+
+			/*setTimeout(function () {
+				$scope.$apply(function () {
+					$scope.nombre = 'Angel';
+				});
+
+				console.log($scope.nombre);
+			}, 2000);*/
+
+			document.getElementById('btn_name').addEventListener('click', function () {
+				$scope.$apply(function () {
+					$scope.nombre = 'Angel';
+				});
+				
+				console.log($scope.nombre);
+			});
+		}]);
+</script>
+
+</html>

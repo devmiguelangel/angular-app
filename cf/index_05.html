@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS CF</title>
+	
+	<style type="text/css">
+	.hover {
+		background: red;
+	}
+
+	.no-hover {
+		background: peru;
+	}
+	</style>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+</head>
+<body ng-app>
+	
+	<button ng-mouseenter="flag = true" ng-mouseleave="flag = false" ng-class="{'hover': flag, 'no-hover': !flag}">Hola</button>
+	<br>
+	<span>{{ flag | json }}</span>
+	
+</body>
+</html>

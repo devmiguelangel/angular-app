@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS CF</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+</head>
+<body ng-app="cfApp">
+
+<div ng-controller="AjaxController">
+	<ul>
+		<li ng-repeat="post in posts">
+			<h3>
+				{{ post.title }}
+			</h3>
+			<p>
+				{{ post.body }}
+			</p>
+		</li>
+	</ul>
+</div>
+	
+</body>
+
+<script type="text/javascript" src="js/controller.js"></script>
+
+</html>
