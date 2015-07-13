@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AngularJS CF</title>
+	
+	<style type="text/css">
+	html, body {
+		background: #eaeaea;
+		text-align: center;
+		margin: 0px;
+	}
+
+	.no-list li {
+		list-style-type: none;
+	}
+
+	.circular {
+		background: peru;
+		width: 100px;
+		height: 100px;
+		display: inline-block;
+	}
+	</style>
+	
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+</head>
+<body ng-app="cfApp">
+
+<div ng-controller="AjaxController">
+	<input type="text" my-autocomplete="repos" placeholder="Buscar Repositorio">
+
+	<ul ng-cloak>
+		<li ng-repeat="post in posts" ng-hide="main_repo && main_repo != post.name">
+			<!-- <img ng-src="{{ repo.owner.avatar_url }}" width="100"> -->
+			<div class="circular" bg-image="{{ post.owner.avatar_url }}"></div>
+			<h2> {{ post.full_name }} </h2>
+		</li>
+	</ul>
+</div>
+	
+</body>
+
+<script type="text/javascript" src="js/controller7.js"></script>
+
+</html>

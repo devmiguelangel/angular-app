@@ -862,12 +862,121 @@ app.service('ListService', ['localStorageService', function(localStorageService)
 <span>{{ flag | json }}</span>
 
 17.	ngSrc - ngCloak
+ngSrc - El navegador mp recupera la URL hasta que AngularJS lo sustituye
+ngCloak - Oculta el elemento hasta que se haya compilado el template
 
+<ul ng-cloak>
+	<li ng-repeat="repo in repos">
+		<img ng-src="{{ repo.owner.avatar_url }}" width="100">
+		<h2> {{ repo.full_name }} </h2>
+	</li>
+</ul>
+
+app.controller('AjaxController', ['$scope', '$http', function($scope, $http){
+	$scope.repos = [];
+
+	$http.get('https://api.github.com/users/djmiguelarango/repos')
+		.success(function (data) {
+			$scope.repos = data;
+
+			console.log(data);
+		})
+		.error(function (err) {
+			console.log(err);
+		});
+}]);
 
 18.	Crear Directivas
-19.	ngRoute (SPA apps)
-20.	Practica Final
-21.
+<ul ng-cloak>
+	<li ng-repeat="repo in repos">
+		<div class="circular" bg-image="{{ repo.owner.avatar_url }}"></div>
+		<h2> {{ repo.full_name }} </h2>
+	</li>
+</ul>
+
+app.directive('bgImage', function(){
+	return function (scope, element, attrs) {
+		attrs.$observe('bgImage', function (value) {
+			element.css({
+				"background" 		: "url(" + value + ")",
+				"background-size"	: "cover",
+				"background-position" : "center"
+			});
+		});
+	};
+});
+
+
+19.	Directivas Personalizadas
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<input type="text" my-autocomplete="repos" placeholder="Buscar Repositorio">
+
+<ul ng-cloak>
+	<li ng-repeat="post in posts" ng-hide="main_repo && main_repo != post.name">
+		<!-- <img ng-src="{{ repo.owner.avatar_url }}" width="100"> -->
+		<div class="circular" bg-image="{{ post.owner.avatar_url }}"></div>
+		<h2> {{ post.full_name }} </h2>
+	</li>
+</ul>
+
+app.directive('myAutocomplete', function(){
+	function link ($scope, element, attrs) {
+		$(element).autocomplete({
+			source: $scope[attrs.myAutocomplete],
+			select: function (e, ui) {
+				e.preventDefault();
+				if (ui.item) {
+					$scope.optionSelected(ui.item.value);
+				};
+			},
+			focus: function (e, ui) {
+				e.preventDefault();
+				$(this).val(ui.item.label);
+			}
+		});
+	};
+
+	return {
+		link: link
+	};
+});
+
+app.controller('AjaxController', ['$scope', '$http', function($scope, $http){
+	$scope.repos = [];
+	$scope.posts = [];
+
+	$http.get('https://api.github.com/users/djmiguelarango/repos')
+		.success(function (data) {
+			$scope.posts = data;
+
+			for (var i = data.length - 1; i >= 0; i--) {
+				var repo = data[i];
+				$scope.repos.push(repo.name);
+
+			};
+
+			console.log(data);
+		})
+		.error(function (err) {
+			console.log(err);
+		});
+
+	$scope.optionSelected = function (data) {
+		$scope.$apply(function() {
+			$scope.main_repo = data;
+		});
+	};
+}]);
+
+20.	ngRoute (SPA apps)
+
+
+
+21.	Practica Final
 22.
 23.
 
